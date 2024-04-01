@@ -1,0 +1,2 @@
+class myNB():
+    pass
