@@ -1,3 +1,7 @@
+from statistics import mode
+import numpy as np
+import pandas as pd
+
 class MyKNN():
     def __init__( self, n_neighbors ):
         # Initialize the class with number of desired neighbors
@@ -5,9 +9,10 @@ class MyKNN():
         if ( isinstance( n_neighbors, list ) ):
             self.n_neighbors = n_neighbors[ 0 ]
         else:
-            self.n_neighbors = n_neighbors
+            self.n_neighbors = 20
         self.train_features = []
         self.train_labels = []
+        self.name = "KNN"
 
     def fit( self, X, y ):
         # Stores training data

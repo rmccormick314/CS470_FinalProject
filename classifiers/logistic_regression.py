@@ -1,8 +1,10 @@
+import numpy as np
+
 class MyLogReg():
     def __init__(self, **kwargs):
         kwargs.setdefault("num_folds", 5)
-        kwargs.setdefault("max_iterations", 10) # trained through cv
-        kwargs.setdefault("step_size", 0.0001) # trained through cv
+        kwargs.setdefault("max_iterations", 25) # trained through cv
+        kwargs.setdefault("step_size", 0.01) # trained through cv
 
         self.train_data = None
         self.train_labels = None
@@ -11,6 +13,8 @@ class MyLogReg():
         self.intercept_ = None
 
         self.plotting_df = {}
+
+        self.name = "Logistic Regression"
 
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -124,3 +128,27 @@ class MyLogReg():
         # these get saved for plotting
         self.avg_loss = np.asarray( self.avg_loss )
         self.avg_loss = self.avg_loss.mean( axis=0 )
+
+    def decision_function(self, X):
+        # Implement a decision_function(X) method which uses the learned weights
+        # and intercept to compute a real-valued score (larger for more likely
+        # to be predicted positive)
+
+        # use best coef and inter to build result
+        pred_vec = np.matmul(X, self.coef_) + self.intercept_
+
+        return pred_vec
+
+    def predict(self, test_features):
+        # Implement a predict(X) method which uses np.where to threshold the
+        # predicted values from decision_function, and obtain a vector of
+        # predicted classes (1 if predicted value is positive, 0 otherwise).
+        pred_vec = self.decision_function(test_features)
+
+        # positive values are 1, anything else is 0
+        pred_vec[pred_vec > 0] = 1
+        pred_vec[pred_vec <= 0] = 0
+
+        # predicted values using either scaled or unscaled features agree:
+        # print(pred_vec)
+        return( pred_vec )
