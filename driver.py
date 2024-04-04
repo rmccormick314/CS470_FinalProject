@@ -67,8 +67,8 @@ for data_set, (input_data, output_array) in data_dict.items():
         index_dict = dict(zip(["train", "test"], indicies))
         param_dicts = [{'n_neighbors':[x]} for x in range(1, 21)]
 
-        logreg_param_grid = [{'max_iterations':max_it} \
-                                for max_it in [100] \
+        logreg_param_grid = [{'max_iterations':max_it, 'step_size':steps} \
+                                for max_it in [10, 25, 100, 250] \
                                 for steps in [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001]]
 
         knn_param_grid = [{'n_neighbors':max_n} \

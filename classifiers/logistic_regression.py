@@ -3,8 +3,8 @@ import numpy as np
 class MyLogReg():
     def __init__(self, **kwargs):
         kwargs.setdefault("num_folds", 5)
-        kwargs.setdefault("max_iterations", 25) # trained through cv
-        kwargs.setdefault("step_size", 0.01) # trained through cv
+        kwargs.setdefault("max_iterations", 100) # trained through cv
+        kwargs.setdefault("step_size", 0.1) # trained through cv
 
         self.train_data = None
         self.train_labels = None
