@@ -11,7 +11,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
 
 from statistics import mode
 import inspect
@@ -22,7 +22,7 @@ import classifiers.logistic_regression
 import classifiers.naive_bayes
 from classifiers.cv import MyCV
 
-print( "Finished loading." )
+print( "\nFinished loading." )
 
 # Display the title
 print("\nCS 480: Final Project Start")
@@ -32,7 +32,7 @@ MyKNN_N_NEIGHBORS_VAL = 20
 CV_VAL = 5
 
 # MISC. VARIABLES
-kf = KFold(n_splits=3, shuffle=True, random_state=1)
+kf = KFold(n_splits=5, shuffle=True, random_state=1)
 test_acc_df_list = []
 pipe = make_pipeline( StandardScaler() )
 
@@ -74,6 +74,8 @@ for data_set, (input_data, output_array) in data_dict.items():
         knn_param_grid = [{'n_neighbors':max_n} \
                                 for max_n in [20]]
 
+        nb_param_grid = []
+
         # Establish different models
         clf = MyCV( estimator = classifiers.knn.MyKNN,
                     param_grid = knn_param_grid,
@@ -82,6 +84,10 @@ for data_set, (input_data, output_array) in data_dict.items():
         RegressionCV = MyCV(estimator=classifiers.logistic_regression.MyLogReg,
                             param_grid=logreg_param_grid,
                             cv=CV_VAL)
+
+        naiveCV = MyCV( estimator=classifiers.naive_bayes.MyNB,
+                        param_grid=knn_param_grid,
+                        cv=CV_VAL)
 
         # Creating dictionary with input and outputs
         set_data_dict = {}
@@ -94,6 +100,7 @@ for data_set, (input_data, output_array) in data_dict.items():
         # Train the models with given data
         clf.fit(**set_data_dict["train"])
         RegressionCV.fit(**set_data_dict["train"])
+        naiveCV.fit(**set_data_dict["train"])
 
         # Get most common output from outputs for featureless set
         most_common_element = mode(set_data_dict["train"]['y'])
@@ -102,6 +109,8 @@ for data_set, (input_data, output_array) in data_dict.items():
         #cv_df = pd.DataFrame( clf.cv_results_ )
         #cv_df.loc[:, ["param_n_neighbors", "mean_test_score"]]
         pred_dict = {
+            "Naive Bayes": \
+                naiveCV.predict(set_data_dict["test"]["X"]),
             "K Nearest Neighbors": \
                 clf.predict(set_data_dict["test"]["X"]),
             "Logistic Regression": \
@@ -111,17 +120,27 @@ for data_set, (input_data, output_array) in data_dict.items():
 
         # Build results dataframe for each algo/fold
         for algorithm, pred_vec in pred_dict.items():
+            if(algorithm != "Featureless"):
+                mat = confusion_matrix(set_data_dict["test"]["y"], pred_vec)
+                tn, fp, fn, tp = mat.ravel()
             test_acc_dict = {
                 "test_accuracy_percent":(
                     pred_vec == set_data_dict["test"]["y"]).mean()*100,
                 "data_set":data_set,
                 "fold_id":foldnum,
-                "algorithm":algorithm
+                "algorithm":algorithm,
+                "true_neg":tn,
+                "false_pos":fp,
+                "false_neg":fn,
+                "true_pos":tp
             }
+
             test_acc_df_list.append(pd.DataFrame(test_acc_dict, index=[0]))
 
 # Build accuracy results dataframe
 test_acc_df = pd.concat(test_acc_df_list)
+test_acc_df.to_csv('out.csv', index=False)
+
 
 # Print results
 print("\n")
@@ -135,6 +154,8 @@ plot = (p9.ggplot(test_acc_df,
                + p9.geom_point())
 
 print(plot)
+
+
 
 print("\nCS 480: Final Project Program End")
 print("==============================\n")

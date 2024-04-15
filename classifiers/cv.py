@@ -11,7 +11,7 @@ class MyCV():
 
         self.param_grid = param_grid
         self.num_folds = cv
-        self.estimator = estimator( n_neighbors = 20 )
+        self.estimator = estimator()
 
         self.best_model = None
 

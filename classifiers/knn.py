@@ -3,13 +3,11 @@ import numpy as np
 import pandas as pd
 
 class MyKNN():
-    def __init__( self, n_neighbors ):
+    def __init__( self ):
         # Initialize the class with number of desired neighbors
         # If initialized with param as list, change to int
-        if ( isinstance( n_neighbors, list ) ):
-            self.n_neighbors = n_neighbors[ 0 ]
-        else:
-            self.n_neighbors = 20
+
+        self.n_neighbors = 20
         self.train_features = []
         self.train_labels = []
         self.name = "KNN"
