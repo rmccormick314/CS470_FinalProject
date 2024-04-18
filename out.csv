@@ -1,0 +1,21 @@
+test_accuracy_percent,data_set,fold_id,algorithm,true_neg,false_pos,false_neg,true_pos
+61.23778501628665,spam,0,Naive Bayes,564,0,357,0
+88.81650380021715,spam,0,K Nearest Neighbors,518,46,57,300
+83.38762214983714,spam,0,Logistic Regression,461,103,50,307
+61.23778501628665,spam,0,Featureless,461,103,50,307
+83.47826086956522,spam,1,Naive Bayes,400,134,18,368
+86.52173913043478,spam,1,K Nearest Neighbors,482,52,72,314
+84.45652173913044,spam,1,Logistic Regression,441,93,50,336
+58.04347826086956,spam,1,Featureless,441,93,50,336
+79.13043478260869,spam,2,Naive Bayes,373,174,18,355
+86.30434782608695,spam,2,K Nearest Neighbors,497,50,76,297
+85.54347826086956,spam,2,Logistic Regression,438,109,24,349
+59.45652173913043,spam,2,Featureless,438,109,24,349
+83.69565217391305,spam,3,Naive Bayes,438,136,14,332
+88.80434782608695,spam,3,K Nearest Neighbors,521,53,50,296
+85.54347826086956,spam,3,Logistic Regression,467,107,26,320
+62.39130434782608,spam,3,Featureless,467,107,26,320
+82.28260869565217,spam,4,Naive Bayes,415,154,9,342
+87.82608695652175,spam,4,K Nearest Neighbors,509,60,52,299
+85.32608695652173,spam,4,Logistic Regression,478,91,44,307
+61.84782608695652,spam,4,Featureless,478,91,44,307
