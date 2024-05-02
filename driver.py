@@ -114,8 +114,8 @@ for data_set, (input_data, output_array) in data_dict.items():
             "K Nearest Neighbors": \
                 clf.predict(set_data_dict["test"]["X"]),
             "Logistic Regression": \
-                RegressionCV.predict(set_data_dict["test"]["X"]),
-            "Featureless":most_common_element
+                RegressionCV.predict(set_data_dict["test"]["X"])#,
+            #"Featureless":most_common_element
         }
 
         # Build results dataframe for each algo/fold

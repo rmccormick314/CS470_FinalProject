@@ -18,14 +18,15 @@ class MyNB():
             # Filter train data by label
             train_features_with_label = self.train_features[self.train_labels == label]
 
-            # Calculate class prior probability
-            prior_prob = len(train_features_with_label) / len(self.train_labels)
+            # Calculate class prior probability with Laplace smoothing
+            prior_prob = (len(train_features_with_label) + 1) / (len(self.train_labels) + 2)
 
-            # Calculate mean and standard deviation for each feature
+            # Calculate P(a|c) for each class and each word
+            word_probs = (np.sum(train_features_with_label > 0, axis=0) + 1) / (len(train_features_with_label) + 2)
+
             class_probs[label] = {
                 'prior_prob': prior_prob,
-                'mean': np.mean(train_features_with_label, axis=0),
-                'std_dev': np.std(train_features_with_label, axis=0)
+                'word_probs': word_probs
             }
 
         # Store trained model
@@ -41,12 +42,10 @@ class MyNB():
             posterior_probs = {}
             for label, class_info in self.trained_model.items():
                 prior_prob = class_info['prior_prob']
-                mean = class_info['mean']
-                std_dev = class_info['std_dev']
+                word_probs = class_info['word_probs']
 
-                # Calculate likelihood using Gaussian assumption
-                likelihood = np.prod((1 / (np.sqrt(2 * np.pi) * std_dev)) *
-                                     np.exp(-(test_instance - mean)**2 / (2 * std_dev**2)))
+                # Calculate likelihood using word probabilities
+                likelihood = np.prod(test_instance * word_probs + (1 - test_instance) * (1 - word_probs))
 
                 # Calculate posterior probability
                 posterior_probs[label] = prior_prob * likelihood
